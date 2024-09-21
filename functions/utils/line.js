@@ -21,6 +21,8 @@ const reply = (token, payload) => {
         url: 'https://api.line.me/v2/bot/message/reply',
         headers: LINE_HEADER,
         data: { replyToken: token, messages: payload },
+    }).catch((error) => {
+        console.log(error.response.data)
     })
 }
 
