@@ -34,6 +34,9 @@ const chat = async (context, history, userText) => {
                             context
                         )}`,
                     },
+                    {
+                        text: `ราคาสินค้าให้ใช้ variations.salePrice ในการตอบ`,
+                    },
                 ],
             },
             ...history,
