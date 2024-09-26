@@ -31,4 +31,24 @@ const getProduct = async () => {
     return products
 }
 
-module.exports = { getProduct }
+const getChatSession = async (userId) => {
+    const doc = await db.collection('chatSessions').doc(userId).get()
+    if (!doc.exists) {
+        console.log('no chat session. created new history')
+        await db.collection('chatSessions').doc(userId).set({
+            userId,
+            history: [],
+        })
+        return []
+    }
+    const chat = doc.data()
+    return chat.history
+}
+
+const updateHistoryChatSession = async (userId, history) => {
+    return await db.collection('chatSessions').doc(userId).update({
+        history,
+    })
+}
+
+module.exports = { getProduct, getChatSession, updateHistoryChatSession }

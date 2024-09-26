@@ -13,8 +13,12 @@ exports.webhook = onRequest(async (req, res) => {
                 case 'message':
                     if (event.message.type === 'text') {
                         const jsonProduct = await firestore.getProduct()
+                        const history = await firestore.getChatSession(
+                            event.source.userId
+                        )
                         const msg = await gemini.chat(
                             jsonProduct,
+                            history,
                             event.message.text
                         )
                         await line.reply(event.replyToken, [
@@ -23,6 +27,12 @@ exports.webhook = onRequest(async (req, res) => {
                                 text: msg,
                             },
                         ])
+                        updateFirestoreHistory(
+                            event.source.userId,
+                            history,
+                            event.message.text,
+                            msg
+                        )
                         break
                     }
                     break
@@ -31,3 +41,30 @@ exports.webhook = onRequest(async (req, res) => {
     }
     res.send(req.method)
 })
+
+const updateFirestoreHistory = async (
+    userId,
+    currentHistory,
+    userMsg,
+    replyMsg
+) => {
+    await firestore.updateHistoryChatSession(userId, [
+        ...currentHistory,
+        {
+            role: 'user',
+            parts: [
+                {
+                    text: userMsg,
+                },
+            ],
+        },
+        {
+            role: 'model',
+            parts: [
+                {
+                    text: replyMsg,
+                },
+            ],
+        },
+    ])
+}
