@@ -27,7 +27,7 @@ exports.webhook = onRequest(async (req, res) => {
                                 text: msg,
                             },
                         ])
-                        updateFirestoreHistory(
+                        await updateFirestoreHistory(
                             event.source.userId,
                             history,
                             event.message.text,
