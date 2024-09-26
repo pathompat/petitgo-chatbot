@@ -32,10 +32,7 @@ const chat = async (context, history, userText) => {
                     {
                         text: `นี่คือข้อมูล json สินค้าของร้าน ให้ใช้ข้อมูลนี้ในการตอบลูกค้า เช่น ราคาสินค้า, จำนวนที่เหลือ json: ${JSON.stringify(
                             context
-                        )}`,
-                    },
-                    {
-                        text: `ราคาสินค้าให้ใช้ variations.salePrice ในการตอบ`,
+                        )} ราคาสิินค้าให้ใช้ variations.salePrice ในการตอบ`,
                     },
                 ],
             },
