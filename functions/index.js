@@ -18,7 +18,7 @@ exports.webhook = onRequest(async (req, res) => {
                         )
                         const msg = await gemini.chat(
                             jsonProduct,
-                            history,
+                            history.slice(history.length - 5, history.length),
                             event.message.text
                         )
                         await line.reply(event.replyToken, [
