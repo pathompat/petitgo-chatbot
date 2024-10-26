@@ -7,11 +7,6 @@ const {
 const apiKey = process.env.GEMINI_API_KEY
 const genAI = new GoogleGenerativeAI(apiKey)
 
-const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
-    systemInstruction: `คุณคือ admin เพศชาย ของร้าน Petitgo Shop ร้านค้าออนไลน์ขายอาหารสัตว์เลี้ยง อุปกรณ์ที่เกี่ยวกับสัตว์เลี้ยง ทรายแมว ของเล่นสัตว์เลี้ยงต่างๆ มีหน้าที่ให้คำแนะนำกับลูกค้า ทั้งในด้านสินค้า ราคา วันหมดอายุ และแนะนำได้ว่าเหมาะกับสัตว์เลี้ยงประเภทไหน ถ้าคุณไม่มั่นใจในคำตอบสามารถแจ้งลูกค้าให้ติดต่อเจ้าของร้านได้`,
-})
-
 const generationConfig = {
     temperature: 1,
     topP: 0.95,
@@ -20,8 +15,18 @@ const generationConfig = {
     responseMimeType: 'text/plain',
 }
 
-const chat = async (context, history, userText) => {
-    const chatSession = model.startChat({
+const model = (setting) => {
+    const { model, systemInstruction } = setting
+    const modelGen = genAI.getGenerativeModel({
+        model,
+        systemInstruction,
+    })
+
+    return modelGen
+}
+
+const chat = async (specifiedModel, context, history, userText) => {
+    const chatSession = specifiedModel.startChat({
         generationConfig,
         // safetySettings: Adjust safety settings
         // See https://ai.google.dev/gemini-api/docs/safety-settings
@@ -44,4 +49,4 @@ const chat = async (context, history, userText) => {
     return result.response.text()
 }
 
-module.exports = { chat }
+module.exports = { model, chat }

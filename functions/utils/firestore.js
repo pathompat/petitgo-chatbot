@@ -45,10 +45,24 @@ const getChatSession = async (userId) => {
     return chat.history
 }
 
+const getChatbotSetting = async () => {
+    let setting
+    const snapshot = await db.collection('chatbotSettings').get()
+    snapshot.forEach((doc) => {
+        setting = doc.data()
+    })
+    return setting
+}
+
 const updateHistoryChatSession = async (userId, history) => {
     return await db.collection('chatSessions').doc(userId).update({
         history,
     })
 }
 
-module.exports = { getProduct, getChatSession, updateHistoryChatSession }
+module.exports = {
+    getProduct,
+    getChatSession,
+    updateHistoryChatSession,
+    getChatbotSetting,
+}

@@ -16,7 +16,9 @@ exports.webhook = onRequest(async (req, res) => {
                         const history = await firestore.getChatSession(
                             event.source.userId
                         )
+                        const setting = await firestore.getChatbotSetting()
                         const msg = await gemini.chat(
+                            gemini.model(setting),
                             jsonProduct,
                             history.slice(history.length - 5, history.length),
                             event.message.text
